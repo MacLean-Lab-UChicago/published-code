@@ -5,10 +5,6 @@
 #	Functional Network (FN)
 # 	Mutual Information (MI)
 
-# TO DO:
-# 	- for all scripts: make paths relative and add a data folder containing the base data needed to run stuff (CellReg, cascade_spks, carry_times, carry_labels, kinematic information)
-
-
 # FIGURE 1
 # plot carry trajectories
 python plot_carry_trajectories.py
