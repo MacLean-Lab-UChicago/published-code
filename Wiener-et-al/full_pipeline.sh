@@ -8,6 +8,11 @@
 # FIGURE 1
 # plot carry trajectories
 python plot_carry_trajectories.py
+# requires (per mouse, per day):
+#  3D dlc keypoint output
+#  reach_times.pkl (pickled dictionary of event times and labels for a given recording session, indexes onto 3D DLC h5 file)
+# outputs (per mouse):
+#  paw centroid trajectory.png
 
 # run kinematics SVM and plot
 python kinematics_svm.py
