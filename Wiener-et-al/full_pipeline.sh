@@ -5,14 +5,26 @@
 #	Functional Network (FN)
 # 	Mutual Information (MI)
 
+
 # FIGURE 1
+# plot reach/grasp/carry trajectories
+python plot_reach_grasp_carry_paw_centroid.py
+# requires (per mouse)
+#	DLC output files (hdf files containing 3D DLC output dataframe)
+#	{mouseID}_{day}_reach_times.pkl (pickled dictionary containing event times relative to kinematic frames and labels)
+# outputs
+#	paw centroid trajectory all reach {day}.pdf (3D plot of paw centroid trajectories during reach instances)
+#	paw centroid trajectory all grasp {day}.pdf (3D plot of paw centroid trajectories during grasp instances)
+#	paw centroid trajectory all carry {day}.pdf (3D plot of paw centroid trajectories during carry instances)
+
+
 # plot carry trajectories
 python plot_carry_trajectories.py
-# requires (per mouse, per day):
-#  3D dlc keypoint output
-#  reach_times.pkl (pickled dictionary of event times and labels for a given recording session, indexes onto 3D DLC h5 file)
-# outputs (per mouse):
-#  paw centroid trajectory.png
+# requires (per mouse)
+#	DLC output files (hdf files containing 3D DLC output dataframe)
+#	{mouseID}_{day}_carries_aligned.pkl (pickled dictionary containing carry times relative to kinematic frames and labels)
+# outputs
+#	paw centroid trajectory.png (3D plot of paw centroid trajectories during carry instances, separated by active and empty grasp)
 
 # run kinematics SVM and plot
 python kinematics_svm.py
@@ -386,3 +398,42 @@ python learning_cross_day_carry_correlations.py
 #	Paired PETH Correlations Over Time subsampled 4 pre 4 post.png (plot of cross-day PETH correlations over time subsampled to the smaller trial category, mean+-SEM across all cells from all mice)
 #	Paired PETH Correlations Over Time subsampled Aligned to Crossover.png (plot of cross-day PETH correlations over time aligned to crossover subsampled to the smaller trial category, mean+-SEM across all cells from all mice)
 #	Paired PETH Correlations Over Time subsampled Aligned to Empty Peak.png (plot of cross-day PETH correlations over time aligned to empty peak subsampled to the smaller trial category, mean+-SEM across all cells from all mice)
+
+
+# DROPS (FIGURE S4)
+
+# find drop-modulated cells
+python drop_analysis.py
+# requires (per mouse):
+#	CellReg (folder including registered cell indices and red cell labels)
+#	cascade_spks (npy file containing all neural activity for a given recording session)
+#	calcium_drop_times (npy file containing all drop times for a given recording session, indexes onto cascade_spks)
+#	NaN_containing_cells_bool (boolean numpy array of which cells contain NaNs during relevant trials)
+#	SVM_combined_active_grasp_modulated_cell_indices.npy (array of decodable cell indices)
+#	{category}_kinematics_and_coupling_timepoint_{splitter}_split_ridge_regression_predrop_r2_values.npy
+#	{category}_kinematics_and_coupling_timepoint_{splitter}_split_ridge_regression_postdrop_r2_values.npy
+# outputs (per mouse):
+#	Cell {neuron} All Days Drop PETH.png (drop PETH per cell)
+#	All Days Population PETH.png (population-averaged PETH)
+#	All Days Drop PETH.png (tiled population activity)
+# 	All Days Drop PETH non-normalized.png (tiled population activity, not normalized per cell)
+#	{mouseID}_all_days_drop_bon_mod_cells.npy (Boolean array of drop-modulated cells via Bonferroni-corrected ANOVA)
+#	{mouseID}_all_days_drop_BH_mod_cells.npy (Boolean array of drop-modulated cells via false discovery rate corrected ANOVA)
+#	pre vs post active {which_measure} r2 scatterplot trial split test {test_size}.png (scatterplot of pre- vs post-drop performance for active grasp models)
+#	pre vs post empty {which_measure} r2 scatterplot trial split test {test_size}.png (scatterplot of pre- vs post-drop performance for empty grasp models)
+#	pre vs post compare couplings {which_measure} r2 scatterplot trial split test {test_size}.png (scatterplot of pre- vs post-drop performance, colored by model training trial type)
+#	active vs empty compare couplings {which_measure} r2 scatterplot trial split test {test_size}.png (scatterplot of active vs empty trained model performance, colored by pre- or post-drop testing)
+# outputs (singular):
+#	pre vs post empty couplings {which_measure} r2 scatterplot trial split test {test_size}.png (scatterplot of pre- vs post-drop performance for empty grasp models)
+#	pre vs post active couplings {which_measure} r2 scatterplot trial split test {test_size}.png(scatterplot of pre- vs post-drop performance for active grasp models)
+#	pre vs post compare couplings {which_measure} r2 scatterplot trial split test {test_size}.pdf (scatterplot of pre- vs post-drop performance, colored by model training trial type)
+#	active vs empty compare pre-post {which_measure} r2 scatterplot trial split test {test_size}.pdf (scatterplot of active vs empty trained model performance, colored by pre- or post-drop testing)
+
+# compare drop-modulated cell identities to population distributions
+python drop_logit.py
+# requires (per mouse):
+#	NaN_containing_cells_bool (boolean numpy array of which cells contain NaNs during relevant trials)
+#	SVM_combined_active_grasp_modulated_cell_indices.npy (array of decodable cell indices)
+#	
+# outputs (singular):
+#	{cell_class} resampled vs drop cell counts.png
