@@ -13,6 +13,8 @@ from sklearn.linear_model import Ridge
 import multiprocessing
 import functools
 import warnings
+from pathlib import Path
+data_dir = Path.cwd() / 'data'
 
 def ridge_regression_worker(neuron, which_fold, active_features, empty_features, active_neural_data, empty_neural_data, shared_graph_bool, active_unique_graph_bool, empty_unique_graph_bool, active_cv_splits, empty_cv_splits, fit_params=False):
 	'''
@@ -172,7 +174,7 @@ if split_method=='trial':
 	for mouseID in mice:
 		# load in data
 		days = src.IO.get_carry_days(mouseID)
-		drive = src.IO.get_drive(mouseID)
+		drive = data_dir + '/neural'
 		mouse_dir = drive + '/' + mouseID + '/'
 		save_dir = mouse_dir + 'carry_analysis/GLM/'
 		
@@ -189,11 +191,8 @@ if split_method=='trial':
 			print(day)
 			# load in the Cascade spikes
 			calcium_data_path = mouse_dir + day
-			if (mouseID=='mouse22')|(mouseID=='mouse25')|(mouseID=='mouse39'):
-				s2p_fld = calcium_data_path + '/'
-			else:
-				s2p_fld = calcium_data_path + '/recording/tifs/suite2p/plane0/'
-			
+			s2p_fld = calcium_data_path + '/'
+
 			spks = np.load(s2p_fld + 'cascade_spks.npy')
 			
 			# index by the registered cells

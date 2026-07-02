@@ -8,6 +8,8 @@ import matplotlib.pyplot as plt
 import src.IO
 import src.utils
 import itertools
+from pathlib import Path
+data_dir = Path.cwd() / 'data'
 
 show_figs = True
 
@@ -18,13 +20,13 @@ time_in_trial = t_pre + t_post
 
 all_mice_within_cat = []
 all_mice_cross_cat = []
-multimouse_fig_dir = '/media/elizawiener/e2176850-652a-4e33-9b85-5f3e649dbb1f/cross-mice active carry/'
+multimouse_fig_dir = data_dir + '/results/cross_mouse_results/'
 
 for mouseID in mice:
 	days = src.IO.get_carry_days(mouseID)
-	drive = src.IO.get_drive(mouseID)
+	drive = data_dir + '/neural'
 	mouse_dir = drive + '/' + mouseID + '/'
-	save_dir = mouse_dir + 'carry_analysis/figures/cell_PETHs/'
+	save_dir = data_dir + '/results/single_mouse_results/' + mouseID + '/'
 	
 	reg_inds = src.utils.load_registered_cells(mouse_dir, days)
 	neural_activity_by_trial = [[] for day in days]

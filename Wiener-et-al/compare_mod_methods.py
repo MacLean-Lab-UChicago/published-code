@@ -73,7 +73,7 @@ for mouse_i, mouseID in enumerate(mice):
 		drive = src.IO.get_drive(mouseID)
 		mouse_dir = drive + '/' + mouseID + '/'
 		days = src.IO.get_carry_days(mouseID)
-		reg_inds, red_cells = src.utils.load_registered_and_red_cells(mouse_dir, days)
+		reg_inds = src.utils.load_registered_cells(mouse_dir, days)
 
 		active_spks = [[] for i in range(len(days))]
 		empty_spks = [[] for i in range(len(days))]

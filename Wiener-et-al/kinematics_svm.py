@@ -22,6 +22,9 @@ from sklearn import metrics
 import matplotlib.pyplot as plt
 import warnings
 import src.IO
+from pathlib import Path
+data_dir = Path.cwd() / 'data'
+
 warnings.filterwarnings("ignore", module="sklearn")
 
 def subsample_dataset_into_sets(x, labels, verbose=False):
@@ -103,7 +106,7 @@ t_pre=4
 t_post=4
 time_in_trial=t_pre+t_post
 
-save_path = '/media/elizawiener/e2176850-652a-4e33-9b85-5f3e649dbb1f/kinematics_3d/active_grasp/SVM_decoder/'
+save_path = data_dir + '/results/cross_mouse_results/'
 calculate=True
 plot=True
 
@@ -124,7 +127,7 @@ if calculate:
 	# iterate over mice
 	for mouse_i, mouseID in enumerate(mice):
 		days = src.IO.get_carry_days(mouseID)
-		drive = src.IO.get_drive(mouseID)
+		drive = data_dir + '/neural'
 		mouse_dir = drive + '/' + mouseID + '/'
 
 		behavior_by_trial = [[] for day in days]
@@ -134,11 +137,8 @@ if calculate:
 		category_labels = []
 		for i, day in enumerate(days):
 			calcium_data_path = mouse_dir + day
-			if (mouseID=='mouse22')|(mouseID=='mouse25')|(mouseID=='mouse39'):
-				s2p_fld = calcium_data_path + '/'
-			else:
-				s2p_fld = calcium_data_path + '/recording/tifs/suite2p/plane0/'
-
+			s2p_fld = calcium_data_path + '/'
+			
 			# load in the behavioral times
 			carry_times = np.load(s2p_fld + 'calcium_carry_times.npy')
 			carry_labels = np.load(s2p_fld + 'calcium_carry_labels.npy')
@@ -277,9 +277,9 @@ if calculate:
 		np.save(save_path + f'{mouseID}_fine_kinematics_svm_accuracies_test_{test_size}.npy', fine_test_accuracy)
 
 	# save the cross-validated accuracies, errors, and confidence intervals for all mice
-	np.save(save_path + 'SVM_accuracies.npy', accuracy)
-	np.save(save_path + 'SVM_error.npy', error)
-	np.save(save_path + '95_CI.npy', CI_95)
+	np.save(save_path + 'kin_SVM_accuracies.npy', accuracy)
+	np.save(save_path + 'kin_SVM_error.npy', error)
+	np.save(save_path + 'kin_95_CI.npy', CI_95)
 
 	np.save(save_path + 'gross_SVM_accuracies.npy', gross_accuracy)
 	np.save(save_path + 'gross_SVM_error.npy', gross_error)
@@ -294,7 +294,7 @@ if plot:
 	# plot mouse-averaged accuracies for gross, fine, and combined models
 	fine_accuracies = np.load(save_path + 'fine_SVM_accuracies.npy')
 	gross_accuracies = np.load(save_path + 'gross_SVM_accuracies.npy')
-	accuracies = np.load(save_path + 'SVM_accuracies.npy')
+	accuracies = np.load(save_path + 'kin_SVM_accuracies.npy')
 
 	mean_fine = np.mean(fine_accuracies)
 	mean_gross = np.mean(gross_accuracies)

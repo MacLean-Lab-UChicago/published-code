@@ -20,7 +20,7 @@ variations on this model include:
 		- a FC-count matched subset of matched unique, mismatched unique, shared, or sign flip FCs are set to 0 in the FN
 	- FC weight strength-based LOOs:
 		- all strong, medium, weak, and zero magnitude FCs (based on percentile) are set to 0 in the FN
-		- a FC-count matched subset of trong, medium, and weak FCs (based on percentile) are set to 0 in the FN
+		- a FC-count matched subset of strong, medium, and weak FCs (based on percentile) are set to 0 in the FN
 	- no weights (W_i^k is 1 such that the coupling term is just the sum of all neurons except the predicted neuron)
 	- permutations:
 		- repeated random reassignment of FC weights (magnitude and sign) among all present FCs (preserves topology of the network)
@@ -42,6 +42,8 @@ import warnings
 from scipy import stats
 from collections import Counter
 import random
+from pathlib import Path
+data_dir = Path.cwd() / 'data'
 
 warnings.filterwarnings("ignore", module="sklearn")
 
@@ -1043,7 +1045,7 @@ if calculate_new_splits:
 			n_repeats=10
 		for mouseID in mice:
 			days = src.IO.get_carry_days(mouseID)
-			drive = '/home/macleanlab/elizawiener/data/'
+			drive = data_dir + '/neural'
 			mouse_dir = drive + '/' + mouseID + '/'
 			save_dir = mouse_dir + 'carry_analysis/GLM/'
 			reg_inds = src.utils.load_registered_cells(mouse_dir, days)
@@ -1245,7 +1247,7 @@ if kinematic_only:
 	n_repeats=10
 	for mouseID in mice:
 		days = src.IO.get_carry_days(mouseID)
-		drive = src.IO.get_drive(mouseID)
+		drive = data_dir + '/neural'
 		mouse_dir = drive + '/' + mouseID + '/'
 		save_dir = mouse_dir + 'carry_analysis/GLM/'
 
@@ -1263,10 +1265,7 @@ if kinematic_only:
 			print(day)
 			# load in the Cascade spikes
 			calcium_data_path = mouse_dir + day
-			if (mouseID=='mouse22')|(mouseID=='mouse25')|(mouseID=='mouse39'):
-				s2p_fld = calcium_data_path + '/'
-			else:
-				s2p_fld = calcium_data_path + '/recording/tifs/suite2p/plane0/'
+			s2p_fld = calcium_data_path + '/'
 			
 			spks = np.load(s2p_fld + 'cascade_spks.npy')
 			
@@ -1395,7 +1394,7 @@ if nulled_coupling:
 	n_repeats=10
 	for mouseID in mice:
 		days = src.IO.get_carry_days(mouseID)
-		drive = src.IO.get_drive(mouseID)
+		drive = data_dir + '/neural'
 		mouse_dir = drive + '/' + mouseID + '/'
 		save_dir = mouse_dir + 'carry_analysis/GLM/'
 		reg_inds = src.utils.load_registered_cells(mouse_dir, days)
@@ -1411,10 +1410,7 @@ if nulled_coupling:
 			print(day)
 			# load in the Cascade spikes
 			calcium_data_path = mouse_dir + day
-			if (mouseID=='mouse22')|(mouseID=='mouse25')|(mouseID=='mouse39'):
-				s2p_fld = calcium_data_path + '/'
-			else:
-				s2p_fld = calcium_data_path + '/recording/tifs/suite2p/plane0/'
+			s2p_fld = calcium_data_path + '/'
 			
 			spks = np.load(s2p_fld + 'cascade_spks.npy')
 			
@@ -1582,7 +1578,7 @@ if unique_LOOs:
 	
 	for mouseID in mice:
 		days = src.IO.get_carry_days(mouseID)
-		drive = src.IO.get_drive(mouseID)
+		drive = data_dir + '/neural'
 		mouse_dir = drive + '/' + mouseID + '/'
 		save_dir = mouse_dir + 'carry_analysis/GLM/'
 		reg_inds = src.utils.load_registered_cells(mouse_dir, days)
@@ -1598,10 +1594,7 @@ if unique_LOOs:
 			print(day)
 			# load in the Cascade spikes
 			calcium_data_path = mouse_dir + day
-			if (mouseID=='mouse22')|(mouseID=='mouse25')|(mouseID=='mouse39'):
-				s2p_fld = calcium_data_path + '/'
-			else:
-				s2p_fld = calcium_data_path + '/recording/tifs/suite2p/plane0/'
+			s2p_fld = calcium_data_path + '/'
 			
 			spks = np.load(s2p_fld + 'cascade_spks.npy')
 			
@@ -1784,7 +1777,7 @@ if edge_strength_LOOs:
 	n_resamples = 100
 	for mouseID in mice:
 		days = src.IO.get_carry_days(mouseID)
-		drive = src.IO.get_drive(mouseID)
+		drive = data_dir + '/neural'
 		mouse_dir = drive + '/' + mouseID + '/'
 		save_dir = mouse_dir + 'carry_analysis/GLM/'
 		reg_inds = src.utils.load_registered_cells(mouse_dir, days)
@@ -1800,10 +1793,7 @@ if edge_strength_LOOs:
 			print(day)
 			# load in the Cascade spikes
 			calcium_data_path = mouse_dir + day
-			if (mouseID=='mouse22')|(mouseID=='mouse25')|(mouseID=='mouse39'):
-				s2p_fld = calcium_data_path + '/'
-			else:
-				s2p_fld = calcium_data_path + '/recording/tifs/suite2p/plane0/'
+			s2p_fld = calcium_data_path + '/'
 			
 			spks = np.load(s2p_fld + 'cascade_spks.npy')
 			
@@ -1991,7 +1981,7 @@ if no_weights:
 
 	for mouseID in mice:
 		days = src.IO.get_carry_days(mouseID)
-		drive = src.IO.get_drive(mouseID)
+		drive = data_dir + '/neural'
 		mouse_dir = drive + '/' + mouseID + '/'
 		save_dir = mouse_dir + 'carry_analysis/GLM/'
 		reg_inds = src.utils.load_registered_cells(mouse_dir, days)
@@ -2007,10 +1997,7 @@ if no_weights:
 			print(day)
 			# load in the Cascade spikes
 			calcium_data_path = mouse_dir + day
-			if (mouseID=='mouse22')|(mouseID=='mouse25')|(mouseID=='mouse39'):
-				s2p_fld = calcium_data_path + '/'
-			else:
-				s2p_fld = calcium_data_path + '/recording/tifs/suite2p/plane0/'
+			s2p_fld = calcium_data_path + '/'
 			spks = np.load(s2p_fld + 'cascade_spks.npy')
 			
 			# index by the registered cells
@@ -2133,7 +2120,7 @@ if permute_edges:
 	
 	for mouseID in mice:
 		days = src.IO.get_carry_days(mouseID)
-		drive = src.IO.get_drive(mouseID)
+		drive = data_dir + '/neural'
 		mouse_dir = drive + '/' + mouseID + '/'
 		save_dir = mouse_dir + 'carry_analysis/GLM/'
 		fig_save_dir =  mouse_dir + 'carry_analysis/GLM/figures/'
@@ -2150,10 +2137,7 @@ if permute_edges:
 			print(day)
 			# load in the Cascade spikes
 			calcium_data_path = mouse_dir + day
-			if (mouseID=='mouse22')|(mouseID=='mouse25')|(mouseID=='mouse39'):
-				s2p_fld = calcium_data_path + '/'
-			else:
-				s2p_fld = calcium_data_path + '/recording/tifs/suite2p/plane0/'
+			s2p_fld = calcium_data_path + '/'
 			
 			spks = np.load(s2p_fld + 'cascade_spks.npy')
 			
@@ -2297,7 +2281,7 @@ if apply_to_drops:
 	test_size=0.3
 	for mouseID in mice:
 		days = src.IO.get_carry_days(mouseID)
-		drive = src.IO.get_drive(mouseID)
+		drive = data_dir + '/neural'
 		mouse_dir = drive + '/' + mouseID + '/'
 		save_dir = mouse_dir + 'carry_analysis/GLM/'
 		
@@ -2323,10 +2307,7 @@ if apply_to_drops:
 			print(day)
 			# load in the Cascade spikes
 			calcium_data_path = mouse_dir + day
-			if (mouseID=='mouse22')|(mouseID=='mouse25')|(mouseID=='mouse39'):
-				s2p_fld = calcium_data_path + '/'
-			else:
-				s2p_fld = calcium_data_path + '/recording/tifs/suite2p/plane0/'
+			s2p_fld = calcium_data_path + '/'
 			
 			spks = np.load(s2p_fld + 'cascade_spks.npy')
 			

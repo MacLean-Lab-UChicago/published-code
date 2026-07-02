@@ -4,6 +4,8 @@ plots a cdf of relative peak and crossover days for all mice
 import src.IO
 import numpy as np
 import matplotlib.pyplot as plt
+from pathlib import Path
+data_dir = Path.cwd() / 'data'
 
 mice = ['mouse22', 'mouse25', 'mouse39', 'mouse35', 'mouse46', 'mouse51', 'mouse549']
 
@@ -67,5 +69,5 @@ ax.spines['top'].set_visible(False)
 ax.set_yticks([])
 ax.set_ylim((.09, .18))
 plt.tight_layout()
-plt.savefig('/media/elizawiener/e2176850-652a-4e33-9b85-5f3e649dbb1f/kinematics_3d/general figures/learning/peak and crossover timeline.pdf', dpi=500)
+plt.savefig(data_dir + 'results/cross_mouse_results/learning/peak and crossover timeline.pdf', dpi=500)
 plt.show()

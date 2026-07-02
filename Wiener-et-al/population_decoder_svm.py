@@ -11,6 +11,8 @@ from sklearn import metrics
 import matplotlib.pyplot as plt
 import warnings
 from imblearn.over_sampling import RandomOverSampler
+from pathlib import Path
+data_dir = Path.cwd() / 'data'
 
 warnings.filterwarnings("ignore", module="sklearn")
 
@@ -83,7 +85,7 @@ t_pre = 4 #frames (30 fps)
 t_post = 4 #frames
 time_in_trial = t_pre+t_post
 
-save_path = '/media/elizawiener/e2176850-652a-4e33-9b85-5f3e649dbb1f/cross-mice active carry/'
+save_path = data_dir + '/results/cross_mouse_results/'
 
 # initialize nested lists for saving all mouse decoding at once
 accuracy = [np.zeros(len(avg_fr_options)*len(cell_pop)) for mouse in mice]
@@ -96,11 +98,11 @@ if run_dimensionality_controls:
 	ctrl_CI_95 = [np.zeros(len(avg_fr_options)*len(cell_pop)) for mouse in mice]
 
 for mouse_i, mouseID in enumerate(mice):
-	drive = src.IO.get_drive(mouseID)
+	drive = data_dir + '/neural'
 	mouse_dir = drive + '/' + mouseID + '/'
 	days = src.IO.get_carry_days(mouseID)
 
-	reg_inds, red_cells = src.utils.load_registered_and_red_cells(mouse_dir, days)
+	reg_inds = src.utils.load_registered_cells(mouse_dir, days)
 
 	which_model_count = 0
 	for avg_fr in avg_fr_options:
@@ -113,10 +115,7 @@ for mouse_i, mouseID in enumerate(mice):
 			for i, day in enumerate(days):
 				# load in the Cascade spikes
 				calcium_data_path = mouse_dir + day
-				if (mouseID=='mouse22')|(mouseID=='mouse25')|(mouseID=='mouse39'):
-					s2p_fld = calcium_data_path + '/'
-				else:
-					s2p_fld = calcium_data_path + '/recording/tifs/suite2p/plane0/'
+				s2p_fld = calcium_data_path + '/'
 				
 				spks = np.load(s2p_fld + 'cascade_spks.npy')
 				# index by the registered cells

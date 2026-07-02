@@ -4,14 +4,8 @@ method="pearson_corr";
 
 for m=1:length(mice)
     mouseID=mice{m};
-    % grab the directory it will be in
-    if strcmp("mouse25", mouseID) | strcmp("mouse39", mouseID) | strcmp("mouse22", mouseID)
-        drive = "/media/elizawiener/HDD-03";
-    elseif strcmp("mouse549", mouseID)
-        drive="/media/elizawiener/HDD-02";
-    else
-        drive = "/media/elizawiener/e2176850-652a-4e33-9b85-5f3e649dbb1f";
-    end
+    % designate the data directory
+    drive = "./data/neural"
 
     if strcmp("mouse22", mouseID)
         days = ["042524", "042824", "042924", "043024", "050124"];
@@ -28,16 +22,12 @@ for m=1:length(mice)
     elseif strcmp("mouse46", mouseID)
         days = ["081924", "082024", "082124", "082224"];
     else
-        % nothing haha
+        % nothing
     end
 
     mouse_dir = drive+"/"+mouseID+"/";
     calcium_data_path = mouse_dir + days(end);
-    if strcmp("mouse22", mouseID)|strcmp("mouse25", mouseID)|strcmp("mouse39", mouseID)
-		s2p_fld = calcium_data_path + "/";
-    else
-		s2p_fld = calcium_data_path + "/recording/tifs/suite2p/plane0/";
-    end
+    s2p_fld = calcium_data_path + "/";
     
     if strcmp("MI", method)
         active_graph = readNPY(s2p_fld + "active_FN_MI.npy");

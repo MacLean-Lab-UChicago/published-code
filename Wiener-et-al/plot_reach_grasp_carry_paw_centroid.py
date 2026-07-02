@@ -29,11 +29,9 @@ alpha=0.1
 
 for mouseID in mice:
 	day = sorted(glob.glob(f'{data_dir}/{mouseID}/*/*_reach_times.pkl'))[-1].split('/')[-2]
-
 	dlc_datapath = f'{data_dir}/{mouseID}/dlc/'
-
 	pkl_savepath = f'{data_dir}/{mouseID}/{day}/'
-	figure_savepath =  f'{data_dir}/{mouseID}/figures/'
+	figure_savepath =  f'{Path.cwd() / 'data'}/results/single_mouse_results/{mouseID}/'
 
 	pkl_filepath = pkl_savepath + f'{mouseID}_{day}_reach_times.pkl'
 	event_times = utils.load_pickle(pkl_filepath)

@@ -6,6 +6,8 @@ import matplotlib.pyplot as plt
 import src.utils
 import seaborn as sns
 from scipy import stats
+from pathlib import Path
+data_dir = Path.cwd() / 'data'
 
 lag='2'
 splitter='KFold'
@@ -13,7 +15,7 @@ n_repeats=10
 n_folds=2
 test_size=0.3
 mice = ['mouse22', 'mouse39', 'mouse35', 'mouse46', 'mouse51', 'mouse549']
-multimouse_fig_dir = '/media/elizawiener/e2176850-652a-4e33-9b85-5f3e649dbb1f/cross-mice active carry/encoding model figures/'
+multimouse_fig_dir = data_dir + '/results/cross_mouse_results/'
 which_measure = 'median'
 normalized=True
 
@@ -22,7 +24,7 @@ multimouse_separate_r2 = []
 multimouse_combined_r2 = []
 
 for mouseID in mice:
-	drive = src.IO.get_drive(mouseID)
+	drive = data_dir + '/neural'
 	mouse_dir = drive + '/' + mouseID + '/'
 	save_dir = mouse_dir + 'carry_analysis/GLM/'
 	fig_save_dir = save_dir+'figures/'

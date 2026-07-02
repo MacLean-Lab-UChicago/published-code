@@ -5,13 +5,15 @@ import numpy as np
 import matplotlib.pyplot as plt
 import src.IO
 import scipy
+from pathlib import Path
+data_dir = Path.cwd() / 'data'
 
 mice = ['mouse22', 'mouse25', 'mouse39', 'mouse35', 'mouse46', 'mouse51', 'mouse549']
 FN_method = 'pearson_corr'
 show_figs=True
 
 for mouseID in mice:
-	drive = src.IO.get_drive(mouseID)
+	drive = data_dir + '/neural'
 	mouse_dir = drive + '/' + mouseID + '/'
 	save_info_dir = mouse_dir + 'carry_analysis/'
 	save_dir = mouse_dir + 'carry_analysis/figures/'

@@ -1,7 +1,7 @@
 '''
 find modulated cells using an SVM to predict if it is a empty or active grasp
 and if it is above chance it is modulated
-(as in Levy et al 2020, Neuron from Hantman)
+(as in Levy et al 2020, Neuron)
 '''
 import numpy as np 
 import src.utils
@@ -12,6 +12,8 @@ from sklearn import metrics
 import matplotlib.pyplot as plt
 import warnings
 from imblearn.over_sampling import RandomOverSampler
+from pathlib import Path
+data_dir = Path.cwd() / 'data'
 
 warnings.filterwarnings("ignore", module="sklearn")
 
@@ -82,12 +84,12 @@ downsample = True
 n_folds=10
 
 for mouseID in mice:
-	drive = src.IO.get_drive(mouseID)
+	drive = data_dir + '/neural'
 	mouse_dir = drive + '/' + mouseID + '/'
 	days = src.IO.get_carry_days(mouseID)
 
 	# load in cross-day alignment information
-	reg_inds, red_cells = src.utils.load_registered_and_red_cells(mouse_dir, days)
+	reg_inds = src.utils.load_registered_cells(mouse_dir, days)
 
 	active_spks = [[] for i in range(len(days))]
 	empty_spks = [[] for i in range(len(days))]
@@ -95,10 +97,7 @@ for mouseID in mice:
 	for i, day in enumerate(days):
 		# load in the Cascade spikes
 		calcium_data_path = mouse_dir + day
-		if (mouseID=='mouse22')|(mouseID=='mouse25')|(mouseID=='mouse39'):
-			s2p_fld = calcium_data_path + '/'
-		else:
-			s2p_fld = calcium_data_path + '/recording/tifs/suite2p/plane0/'
+		s2p_fld = calcium_data_path + '/'
 		
 		spks = np.load(s2p_fld + 'cascade_spks.npy')
 		# index by the registered cells

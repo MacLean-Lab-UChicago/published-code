@@ -5,6 +5,8 @@ import numpy as np
 import src.IO
 import matplotlib.pyplot as plt
 from scipy import stats
+from pathlib import Path
+data_dir = Path.cwd() / 'data'
 
 def d_prime_calc(a, b, std_a, std_b):
 	d = np.abs(a-b)/np.sqrt(.5*(np.square(std_a)+np.square(std_b)))
@@ -26,7 +28,7 @@ if day_pairs:
 	for rel_to in days_rel_to:
 		rel_diff = [[] for mouse in mice]
 		for mouse_i, mouseID in enumerate(mice):
-			drive = src.IO.get_drive(mouseID)
+			drive = data_dir + '/neural'
 			mouse_dir = drive + '/' + mouseID + '/'
 			if rel_to=='peak':
 				learning_days = src.IO.get_carry_peak_learning_days(mouseID, m46_late)
@@ -181,7 +183,7 @@ else: # single days
 	for rel_to in days_rel_to:
 		rel_diff = [[] for mouse in mice]
 		for mouse_i, mouseID in enumerate(mice):
-			drive = src.IO.get_drive(mouseID)
+			drive = data_dir + '/neural'
 			mouse_dir = drive + '/' + mouseID + '/'
 			if rel_to=='peak':
 				learning_days = src.IO.get_carry_peak_learning_days(mouseID, m46_late)

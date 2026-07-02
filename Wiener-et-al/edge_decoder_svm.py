@@ -12,6 +12,8 @@ import matplotlib.pyplot as plt
 import warnings
 import multiprocessing
 import functools
+from pathlib import Path
+data_dir = Path.cwd() / 'data'
 
 warnings.filterwarnings("ignore", module="sklearn")
 
@@ -108,7 +110,7 @@ cv_folds=10
 
 for mouseID in mice:
 	days = src.IO.get_carry_days(mouseID)
-	drive = src.IO.get_drive(mouseID)
+	drive = data_dir + '/neural/'
 	mouse_dir = drive + '/' + mouseID + '/'
 
 	# load in cross-day cell registration
@@ -121,10 +123,7 @@ for mouseID in mice:
 		print(day)
 		# load in the Cascade spikes
 		calcium_data_path = mouse_dir + day
-		if (mouseID=='mouse22')|(mouseID=='mouse25')|(mouseID=='mouse39'):
-			s2p_fld = calcium_data_path + '/'
-		else:
-			s2p_fld = calcium_data_path + '/recording/tifs/suite2p/plane0/'
+		s2p_fld = calcium_data_path + '/'
 		
 		spks = np.load(s2p_fld + 'cascade_spks.npy')
 		

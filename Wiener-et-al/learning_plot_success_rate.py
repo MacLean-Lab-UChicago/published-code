@@ -7,32 +7,21 @@ import src.IO
 import src.utils
 import matplotlib.pyplot as plt
 from scipy.stats import sem
-
-def get_cohort(mouseID):
-	if (mouseID=='mouse22')|(mouseID=='mouse25')|(mouseID=='mouse39'):
-		cohort='2024_aprilmay_pv'
-	elif mouseID=='mouse35':
-		cohort='2024_july_sst'
-	elif (mouseID=='mouse51')|(mouseID=='mouse549')|(mouseID=='mouse46'):
-		cohort='2024_august_sst'
-	else:
-		cohort=None
-		print('not a valid mouseID, check spelling')
-	return cohort
+from pathlib import Path
+data_dir = Path.cwd() / 'data'
 
 mice = ['mouse22', 'mouse25', 'mouse39', 'mouse35', 'mouse46', 'mouse51', 'mouse549']
 training_days = np.arange(12)+1
-multi_mouse_save_dir = '/media/elizawiener/e2176850-652a-4e33-9b85-5f3e649dbb1f/cross-mice active carry/learning/'
+multi_mouse_save_dir = data_dir + '/results/cross_mouse_results/learning/'
 
 cross_mouse_success = np.zeros((len(training_days), len(mice)))*np.nan
 cross_mouse_rate = np.zeros((len(training_days), len(mice)))*np.nan
 for mouse_i, mouseID in enumerate(mice):
 	days = src.IO.get_days(mouseID)
-	drive = src.IO.get_drive(mouseID)
-	cohort = get_cohort(mouseID)
+	drive = data_dir + '/neural'
 	mouse_dir = drive + '/' + mouseID + '/'
 	fig_save_dir = mouse_dir + 'carry_analysis/learning/figures/'
-	pellet_dir = f'/media/elizawiener/e2176850-652a-4e33-9b85-5f3e649dbb1f/kinematics_3d/{cohort}/{mouseID}/data/'
+	pellet_dir = f'{data_dir}/kinematics/{mouseID}/pellet_presence/'
 
 	success = np.zeros(len(training_days))*np.nan
 	rate = np.zeros(len(training_days))*np.nan

@@ -5,11 +5,13 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy import stats
 import src.IO
+from pathlib import Path
+data_dir = Path.cwd() / 'data'
 
 mice = ('mouse22', 'mouse25', 'mouse39', 'mouse35', 'mouse46', 'mouse51', 'mouse549')
 categories = ['Decodeable', 'Non-Decodable']
 edge_cat = ['Shared Edge, Decodable', 'Unique Edge, Decodable', 'Sign Flip, Decodable', 'Zero, Decodable', 'Shared Edge, Non-Decodable', 'Unique Edge, Non-Decodable', 'Sign Flip, Non-Decodable', 'Zero, Non-Decodable']
-fig_save_dir = '/media/elizawiener/e2176850-652a-4e33-9b85-5f3e649dbb1f/cross-mice active carry/'
+fig_save_dir = data_dir + '/results/cross_mouse_results/'
 edge_types = ['Overall', 'Non-Zero', 'Null', 'Unique', 'Shared', 'Sign Flip']
 
 prop_informative = np.zeros((len(edge_types), len(mice)))
@@ -20,14 +22,11 @@ edge_cat_mod_counts = {key:np.zeros(len(mice)) for key in edge_cat}
 total_edge_counts = np.zeros(len(mice))
 for mouse_i, mouseID in enumerate(mice):
 	days = src.IO.get_carry_days(mouseID)
-	drive = src.IO.get_drive(mouseID)
+	drive = data_dir + '/neural'
 	mouse_dir = drive + '/' + mouseID + '/'
 	edges = src.IO.load_pickle(mouse_dir + f'carry_analysis/unique_shared_by_null_comparison_weighted_PDF_10000_pearson_corr.pkl')
 	calcium_data_path = mouse_dir + days[-1]
-	if (mouseID=='mouse22')|(mouseID=='mouse25')|(mouseID=='mouse39'):
-		s2p_fld = calcium_data_path + '/'
-	else:
-		s2p_fld = calcium_data_path + '/recording/tifs/suite2p/plane0/'
+	s2p_fld = calcium_data_path + '/'
 	accuracy = np.load(s2p_fld + 'svm_decoding_accuracy_by_edge.npy')
 	accuracy_by_edge = np.mean(accuracy, axis=0)
 	decodable = (accuracy_by_edge-(stats.sem(accuracy, axis=0)*1.96))>0.5 # accuracy-95% CI > chance

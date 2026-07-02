@@ -6,6 +6,8 @@ import src.IO
 import src.utils
 from scipy import stats
 import matplotlib.pyplot as plt
+from pathlib import Path
+data_dir = Path.cwd() / 'data'
 
 def get_relative_crossover_pair(mouseID, late_m46):
 	if mouseID=='mouse22':
@@ -66,7 +68,7 @@ low_count_thresh=4
 late_m46=False
 subsample_to_smaller=True
 
-multi_mouse_save_dir = '/media/elizawiener/e2176850-652a-4e33-9b85-5f3e649dbb1f/cross-mice active carry/learning/'
+multi_mouse_save_dir = data_dir + '/results/cross_mouse_results/learning/'
 
 for mouseID in mice:
 	print(mouseID)
@@ -75,7 +77,7 @@ for mouseID in mice:
 	for d, day in enumerate(days[:-1]):
 		day_pairs.append([day, days[d+1]])
 	print(day_pairs)
-	drive = src.IO.get_drive(mouseID)
+	drive = data_dir + '/neural'
 	mouse_dir = drive + '/' + mouseID + '/'
 	save_dir = mouse_dir + 'carry_analysis/learning/'
 	if calculate_PETHs:
@@ -84,7 +86,7 @@ for mouseID in mice:
 		for pair in day_pairs:
 			not_a_pair=False
 			try:
-				reg_inds, red_cells = src.utils.load_registered_and_red_cells(mouse_dir, pair)
+				reg_inds = src.utils.load_registered_cells(mouse_dir, pair)
 			except:
 				# accounts for shaping days before training starts which do not have aligned cell data
 				continue
@@ -214,7 +216,7 @@ if cross_mouse:
 	cross_mouse_correlations = [[[],[],[],[],[],[],[],[],[],[],[]] for beh in behaviors]
 	for mouseID in mice:
 		print(mouseID)
-		drive = src.IO.get_drive(mouseID)
+		drive = data_dir + '/neural'
 		mouse_dir = drive + '/' + mouseID + '/'
 		save_dir = mouse_dir + 'carry_analysis/learning/'
 		if subsample_to_smaller:
@@ -266,7 +268,7 @@ if cross_mouse:
 	pair_labels = ['-7,-6','-6,-5', '-5,-4', '-4,-3', '-3,-2', '-2,-1', '-1,0', '0,1', '1,2', '2,3', '3,4', '4,5', '5,6', '6,7', '7,8', '8,9', '9,10']
 	for mouseID in mice:
 		print(mouseID)
-		drive = src.IO.get_drive(mouseID)
+		drive = data_dir + '/neural'
 		mouse_dir = drive + '/' + mouseID + '/'
 		save_dir = mouse_dir + 'carry_analysis/learning/'
 		if subsample_to_smaller:
@@ -341,7 +343,7 @@ if cross_mouse:
 	pair_labels = ['-7,-6','-6,-5', '-5,-4', '-4,-3', '-3,-2', '-2,-1', '-1,0', '0,1', '1,2', '2,3', '3,4', '4,5', '5,6', '6,7', '7,8', '8,9']
 	for mouseID in mice:
 		print(mouseID)
-		drive = src.IO.get_drive(mouseID)
+		drive = data_dir + '/neural'
 		mouse_dir = drive + '/' + mouseID + '/'
 		save_dir = mouse_dir + 'carry_analysis/learning/'
 		if subsample_to_smaller:

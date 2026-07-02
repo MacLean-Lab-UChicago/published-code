@@ -12,6 +12,8 @@ import functools
 import matplotlib.pyplot as plt
 import os
 import time
+from pathlib import Path
+data_dir = Path.cwd() / 'data'
 
 def NatsToBits(x):
     ''' convert from nats to bits '''
@@ -40,7 +42,7 @@ if (not isJVMStarted()):
 for mouseID in mice:
     # load in the data
     days = src.IO.get_carry_days(mouseID)
-    drive = src.IO.get_drive(mouseID)
+    drive = data_dir + '/neural'
     mouse_dir = drive + '/' + mouseID + '/'
     save_dir = mouse_dir + 'carry_analysis/MI/'
     if not os.path.isdir(save_dir):
@@ -52,10 +54,7 @@ for mouseID in mice:
         print(day)
         # load in the Cascade spikes
         calcium_data_path = mouse_dir + day
-        if (mouseID=='mouse22')|(mouseID=='mouse25')|(mouseID=='mouse39'):
-            s2p_fld = calcium_data_path + '/'
-        else:
-            s2p_fld = calcium_data_path + '/recording/tifs/suite2p/plane0/'
+        s2p_fld = calcium_data_path + '/'
         
         spks = np.load(s2p_fld + 'cascade_spks.npy')
         

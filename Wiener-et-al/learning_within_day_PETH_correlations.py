@@ -6,6 +6,8 @@ import src.IO
 import src.utils
 import matplotlib.pyplot as plt
 from scipy import stats
+from pathlib import Path
+data_dir = Path.cwd() / 'data'
 
 def get_relative_peak_day(mouseID, late_m46):
 	if mouseID=='mouse22':
@@ -106,7 +108,7 @@ if calculate_correlations:
 				for d, day in enumerate(days[:-1]):
 					day_pairs.append([day, days[d+1]])
 				print(day_pairs)
-				drive = src.IO.get_drive(mouseID)
+				drive = data_dir + '/neural'
 				mouse_dir = drive + '/' + mouseID + '/'
 				save_dir = mouse_dir + 'carry_analysis/learning/'
 				
@@ -115,7 +117,7 @@ if calculate_correlations:
 				for pair in day_pairs:
 					not_a_pair=False
 					try:
-						reg_inds, red_cells = src.utils.load_registered_and_red_cells(mouse_dir, pair)
+						reg_inds = src.utils.load_registered_cells(mouse_dir, pair)
 					except:
 						# to exclude days in the data during shaping (prior to training days)
 						continue
@@ -232,7 +234,7 @@ if calculate_correlations:
 	else:
 		for mouseID in mice:
 			days = src.IO.get_days(mouseID)
-			drive = src.IO.get_drive(mouseID)
+			drive = data_dir + '/neural'
 			mouse_dir = drive + '/' + mouseID + '/'
 			save_dir = mouse_dir + 'carry_analysis/learning/'
 			correlations = [[[] for day in training_days] for c in carry_classes]
@@ -318,7 +320,7 @@ if day_pairs:
 		training_day_pairs = ['1-2', '2-3', '3-4', '4-5', '5-6', '6-7', '7-8', '8-9', '9-10', '10-11', '11-12']
 		cross_mouse_correlations = [[[] for day in training_day_pairs] for c in carry_classes]
 		for mouseID in mice:
-			drive = src.IO.get_drive(mouseID)
+			drive = data_dir + '/neural'
 			mouse_dir = drive + '/' + mouseID + '/'
 			save_dir = mouse_dir + 'carry_analysis/learning/'
 			if subsample_to_smaller:
@@ -514,7 +516,7 @@ if day_pairs:
 else:
 	cross_mouse_correlations = [[[] for day in training_days] for c in carry_classes]
 	for mouseID in mice:
-		drive = src.IO.get_drive(mouseID)
+		drive = data_dir + '/neural'
 		mouse_dir = drive + '/' + mouseID + '/'
 		save_dir = mouse_dir + 'carry_analysis/learning/'
 		if omit_low_count:

@@ -15,15 +15,16 @@ import matplotlib.pyplot as plt
 import glob
 import pickle
 from scipy import stats
+from pathlib import Path
+data_dir = Path.cwd() / 'data'
 
 def get_days(mouseID, carry_class_folder):
-	classification_files = glob.glob(f'{carry_class_folder}{mouseID}*')
-	days = np.unique([file.split('_')[1] for file in classification_files])
+	classification_files = glob.glob(f'{carry_class_folder}{mouseID}*_classified_pellet_presence.pkl')
+	days = np.unique([file.split('_')[-5] for file in classification_files])
 	return days
 
 mice = ['mouse22', 'mouse25', 'mouse39', 'mouse35', 'mouse46', 'mouse51', 'mouse549']
-carry_classification_folder = '/media/elizawiener/e2176850-652a-4e33-9b85-5f3e649dbb1f/pellet/'
-figures_folder = '/media/elizawiener/e2176850-652a-4e33-9b85-5f3e649dbb1f/kinematics_3d/general figures/learning/'
+figures_folder = data_dir + '/results/cross_mouse_results/learning/'
 
 drop_counts = []
 empty_counts = []
@@ -31,6 +32,7 @@ active_counts = []
 n_carries = []
 n_days = np.zeros(len(mice))
 for mouse_i, mouse in enumerate(mice):
+	carry_classification_folder = data_dir + f'/kinematics/{mouseID}/pellet_presence/'
 	days = get_days(mouse, carry_classification_folder)
 	print(days)
 	n_days[mouse_i] = len(days)

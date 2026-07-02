@@ -6,6 +6,8 @@ import matplotlib.pyplot as plt
 import src.IO
 import src.utils
 from scipy import stats
+from pathlib import Path
+data_dir = Path.cwd() / 'data'
 
 mice = ['mouse22', 'mouse25', 'mouse39', 'mouse35', 'mouse46', 'mouse51', 'mouse549']
 time_decodable_MI = []
@@ -13,11 +15,10 @@ trial_decodable_MI = []
 decodable_MI = []
 non_decodable_MI = []
 for mouseID in mice:
-	drive = src.IO.get_drive(mouseID)
+	drive = data_dir + '/neural'
 	mouse_dir = drive + '/' + mouseID + '/'
 	days = src.IO.get_carry_days(mouseID)
 	load_dir = mouse_dir + 'carry_analysis/MI/'
-	# reg_inds, red_cells = src.utils.load_registered_and_red_cells(mouse_dir, days)
 	s2p_fld = src.IO.get_s2p_fld(mouseID, days[-1])
 	
 	NaN_cells = np.load(s2p_fld + 'NaN_containing_cells_bool.npy')
@@ -61,12 +62,15 @@ results = stats.mannwhitneyu(non_decodable_MI, decodable_MI, alternative='less')
 print(results)
 
 fig, ax = plt.subplots()
-ax.ecdf(non_decodable_MI, label='non-decodable neurons')
-ax.ecdf(decodable_MI, label='decodable neurons')
+ax.ecdf(non_decodable_MI, label='non-decodable neurons', color='darkgrey')
+ax.ecdf(decodable_MI, label='decodable neurons', color='indianred')
 ax.set_xlim([0, np.max(np.concatenate([non_decodable_MI, decodable_MI]))])
 ax.set_xlabel('MI')
 ax.set_ylabel('Cumulative Proportion')
 ax.legend(loc='lower right')
+ax.spines['right'].set_visible(False)
+ax.spines['top'].set_visible(False)
+plt.savefig(data_dir + '/results/cross_mouse_results/node trial category MI cdf.pdf', dpi=550)
 plt.show()
 
 fig, ax = plt.subplots()

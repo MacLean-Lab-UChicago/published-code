@@ -2,11 +2,13 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy import stats
 import seaborn as sns
+from pathlib import Path
+data_dir = Path.cwd() / 'data'
 
 mice = ['mouse22', 'mouse25', 'mouse39', 'mouse35', 'mouse46', 'mouse51', 'mouse549']
 
 categories = ['non-decodable\ninstant fr', 'decodable\ninstant fr', 'full pop\ninstant fr', 'non-decodable\navg fr', 'decodable\navg fr', 'full pop\navg fr']
-save_path = '/media/elizawiener/e2176850-652a-4e33-9b85-5f3e649dbb1f/cross-mice active carry/'
+save_path = data_dir + '/results/cross_mouse_results/'
 fig_savepath = save_path + 'figures/'
 test_size = 0.1
 control=False
@@ -66,7 +68,7 @@ ax.legend()
 plt.show()
 
 # compare neural to kinematic
-kin_dir = '/media/elizawiener/e2176850-652a-4e33-9b85-5f3e649dbb1f/kinematics_3d/active_grasp/SVM_decoder/'
+kin_dir =  data_dir + '/results/cross_mouse_results/'
 if instant_fr:
     neural_accuracy = np.load(save_path + f'SVM_accuracies_test_{test_size}.npy')[:, 2]
     neural_error = np.load(save_path + f'SVM_error_test_{test_size}.npy')[:, 2]
@@ -77,7 +79,7 @@ else:
 # gross fine and all kinematics compared to neural, mouse-averaged
 gross_accuracies = np.load(kin_dir + 'gross_SVM_accuracies.npy')
 fine_accuracies = np.load(kin_dir + 'fine_SVM_accuracies.npy')
-kin_accuracies = np.load(kin_dir + 'SVM_accuracies.npy')
+kin_accuracies = np.load(kin_dir + 'kin_SVM_accuracies.npy')
 
 mean_neural = np.mean(neural_accuracy)
 mean_gross = np.mean(gross_accuracies)
@@ -165,9 +167,9 @@ else:
     ax.text(3, np.max(by_mouse_a)+.085, 'n.s.', horizontalalignment='center')
 
 if instant_fr:
-    plt.savefig('/media/elizawiener/e2176850-652a-4e33-9b85-5f3e649dbb1f/cross-mice active carry/SVM/mouse_avg_kin_vs_neural_instant_fr.pdf', dpi=500)
+    plt.savefig(f'{fig_savepath}mouse_avg_kin_vs_neural_instant_fr.pdf', dpi=500)
 else:
-    plt.savefig('/media/elizawiener/e2176850-652a-4e33-9b85-5f3e649dbb1f/cross-mice active carry/SVM/mouse_avg_kin_vs_neural_avg_fr.pdf', dpi=500)
+    plt.savefig(f'{fig_savepath}mouse_avg_kin_vs_neural_avg_fr.pdf', dpi=500)
 plt.show()
 
 # average across mice
@@ -306,7 +308,7 @@ ax.spines['top'].set_visible(False)
 
 #plt.tight_layout()
 if instant_fr:
-    plt.savefig('/media/elizawiener/e2176850-652a-4e33-9b85-5f3e649dbb1f/cross-mice active carry/SVM/neural_pop_decoding_instant_fr.pdf', dpi=500)
+    plt.savefig(f'{fig_savepath}neural_pop_decoding_instant_fr.pdf', dpi=500)
 else:
-    plt.savefig('/media/elizawiener/e2176850-652a-4e33-9b85-5f3e649dbb1f/cross-mice active carry/SVM/neural_pop_decoding_avg_fr.pdf', dpi=500)
+    plt.savefig(f'{fig_savepath}neural_pop_decoding_avg_fr.pdf', dpi=500)
 plt.show()

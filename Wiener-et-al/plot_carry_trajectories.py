@@ -6,8 +6,10 @@ import functions
 import pandas as pd
 import matplotlib.pyplot as plt 
 from mpl_toolkits.mplot3d import Axes3D
-import utils
+import srcutils
 import os
+from pathlib import Path
+data_dir = Path.cwd() / 'data'
 
 mice = ['mouse549']
 bodyparts_for_centroid = ['d2knuckle', 'd3knuckle', 'wrist', 'wrist_outer']
@@ -23,15 +25,14 @@ plot_splay=False
 plot_aperature=False
 
 for mouseID in mice:
-	cohort = utils.get_cohort(mouseID)
 	days = utils.get_carry_days(mouseID)
 	drive = utils.get_drive(mouseID)
 
-	dlc_datapath = '/media/elizawiener/e2176850-652a-4e33-9b85-5f3e649dbb1f/kinematics_3d/' + cohort + '/' + mouseID + '/data/'
+	dlc_datapath = data_dir + '/kinematics/' mouseID + '/dlc/'
 	mouse_datapath = drive + '/' + mouseID + '/'
 
-	pkl_savepath = mouse_datapath + 'cam_carry_alignment/'
-	figure_savepath = '/media/elizawiener/e2176850-652a-4e33-9b85-5f3e649dbb1f/kinematics_3d/' + cohort + '/' + mouseID + '/figures/active_grasp/'
+	pkl_savepath = data_dir + '/kinematics/' mouseID + '/'
+	figure_savepath = data_dir + f'/results/single_mouse_results/{mouseID}/'
 
 	if not os.path.isdir(figure_savepath):
 		os.mkdir(figure_savepath)
@@ -111,6 +112,19 @@ for mouseID in mice:
 	dlc_data=dlc_data[:, :-3, :]
 
 	if plot_trajectories:
+		# fig, ax = plt.subplots(1, 3, subplot_kw={'projection': '3d'})
+		# for carry_type in np.unique(labels_multiday).astype(int):
+		# 	plotting_data=dlc_data[labels_multiday==carry_type, :, :]
+		# 	avg = np.nanmean(plotting_data, axis=0)
+		# 	for bp_idx, bp in enumerate(bodyparts[:-1]):
+		# 		ax[carry_type].plot3D(avg[bp_idx*3, :], -avg[bp_idx*3+1, :], -avg[bp_idx*3+2, :], label=bp)
+		# ax[1].legend(loc='center', bbox_to_anchor=(0, -.25), ncol=len(bodyparts)/2)	
+		# ax[0].set_title('Drop')
+		# ax[1].set_title('Success')
+		# ax[2].set_title('Dry')
+		# fig.suptitle(f'{mouseID} Averaged Carry Trajectories')
+		# plt.show()
+
 		bkg_color = (0, 0, 0, 0.06)
 		fig, ax = plt.subplots(subplot_kw={'projection': '3d'})
 		for carry_type in np.sort(np.unique(labels_multiday).astype(int))[::-1]:
@@ -173,6 +187,41 @@ for mouseID in mice:
 		#ax.set_title(f'{mouseID.capitalize()} Carry Trajectories')
 		fig.savefig(figure_savepath + 'paw centroid trajectory.png', dpi=660)
 		plt.show()
+
+		bkg_color = (0, 0, 0, 0.06)
+		fig, ax = plt.subplots(subplot_kw={'projection': '3d'})
+		alpha=0.03
+		for carry in range(paw_centroid.shape[0]):
+			ax.plot3D(paw_centroid[carry, 0, :], -paw_centroid[carry, 1, :], -paw_centroid[carry, 2, :], color='k', alpha=alpha)
+		mean_carry = np.nanmean(paw_centroid[:, :, :], axis=0)
+		ax.plot3D(mean_carry[0, :], -mean_carry[1, :], -mean_carry[2, :], color='r', lw=2)
+
+
+		# ax.plot3D(ped_x, -ped_y, -ped_z, '*', color='k', label='pedestal')
+		ax.view_init(35, -146)
+
+		# Hide grid lines
+		ax.grid(False)
+
+		# Hide axes ticks
+		ax.set_xticks([])
+		ax.set_yticks([])
+		ax.set_zticks([])
+
+		# Remove axis lines
+		ax.xaxis.line.set_color((1.0, 1.0, 1.0, 0.0))
+		ax.yaxis.line.set_color((1.0, 1.0, 1.0, 0.0))
+		ax.zaxis.line.set_color((1.0, 1.0, 1.0, 0.0))
+
+		# change the background color
+		ax.xaxis.set_pane_color(bkg_color) # White (RGBA: 1 for white, 1 for opaque)
+		ax.yaxis.set_pane_color(bkg_color)
+		ax.zaxis.set_pane_color(bkg_color)
+
+		#ax.set_title(f'{mouseID.capitalize()} Carry Trajectories')
+		#fig.savefig(figure_savepath + 'paw centroid trajectory all carries.pdf', dpi=660)
+		plt.show()
+
 
 	if plot_normal:
 		figx, axx = plt.subplots(3, 1)

@@ -9,6 +9,8 @@ import seaborn as sns
 import pandas as pd
 from scipy import stats
 import src.utils
+from pathlib import Path
+data_dir = Path.cwd() / 'data'
 
 lag='2'
 splitter='KFold'
@@ -18,7 +20,7 @@ test_size=0.3
 normalized=True
 
 mice = ['mouse22', 'mouse39', 'mouse35', 'mouse46', 'mouse51', 'mouse549']
-multimouse_fig_dir = '/media/elizawiener/e2176850-652a-4e33-9b85-5f3e649dbb1f/cross-mice active carry/encoding model figures/'
+multimouse_fig_dir = data_dict + '/results/cross_mouse_results/'
 which_measure = 'median'
 
 full_model=True
@@ -35,7 +37,7 @@ if kin_vs_full:
 	# compare kin only to kinematics-and-coupling full model
 	full_dict = {'mouse':[], 'r2':[], 'model':[]}
 	for mouseID in mice:
-		drive = src.IO.get_drive(mouseID)
+		drive = data_dir + '/neural'
 		mouse_dir = drive + '/' + mouseID + '/'
 		save_dir = mouse_dir + 'carry_analysis/GLM/'
 		fig_save_dir = save_dir+'figures/'
@@ -121,7 +123,7 @@ if magnitude_LOO:
 	dim_matched_by_mouse_LOO_dict = {mouseID:{} for mouseID in mice}
 	for mouseID in mice:
 		# load in data
-		drive = src.IO.get_drive(mouseID)
+		drive = data_dir + '/neural'
 		mouse_dir = drive + '/' + mouseID + '/'
 		save_dir = mouse_dir + 'carry_analysis/GLM/'
 		fig_save_dir = save_dir+'figures/'
@@ -266,7 +268,7 @@ if full_model:
 	r2_dict={'mouse':[], 'r2':[], 'couplings':[]}
 	all_folds_dict={'mouse':[], 'r2':[], 'couplings':[]}
 	for mouseID in mice:
-		drive = src.IO.get_drive(mouseID)
+		drive = data_dir + '/neural'
 		mouse_dir = drive + '/' + mouseID + '/'
 		save_dir = mouse_dir + 'carry_analysis/GLM/'
 		fig_save_dir = save_dir+'figures/'
@@ -357,7 +359,7 @@ if full_model:
 
 	# scatterplot per mouse
 	for mouseID in mice:
-		drive = src.IO.get_drive(mouseID)
+		drive = data_dir + '/neural'
 		mouse_dir = drive + '/' + mouseID + '/'
 		save_dir = mouse_dir + 'carry_analysis/GLM/'
 		fig_save_dir = save_dir+'figures/'
@@ -456,7 +458,7 @@ if full_model:
 	# (check that there is not a large separation of performance by category)
 	fig, ax = plt.subplots()
 	for mouseID in mice:
-		drive = src.IO.get_drive(mouseID)
+		drive = data_dir + '/neural'
 		mouse_dir = drive + '/' + mouseID + '/'
 		save_dir = mouse_dir + 'carry_analysis/GLM/'
 		colors = ['darkred', 'navy']
@@ -514,7 +516,7 @@ if plot_LOO_models:
 	dim_matched_by_mouse_LOO_dict = {mouseID:{} for mouseID in mice}
 	same_size_edges_dict = {'mouse':[], 'delta r2':[], 'left out':[]}
 	for mouseID in mice:
-		drive = src.IO.get_drive(mouseID)
+		drive = data_dir + '/neural'
 		mouse_dir = drive + '/' + mouseID + '/'
 		save_dir = mouse_dir + 'carry_analysis/GLM/'
 		fig_save_dir = save_dir+'figures/'
@@ -760,7 +762,7 @@ if plot_LOO_scatter_by_magnitude:
 	data_dict = {'delta_r2':[], 'average in weight':[], 'FC category':[], 'mouseID':[]}
 	weight_mag_dict = {'weight magnitude':[], 'FC category':[]}
 	for mouseID in mice:
-		drive = src.IO.get_drive(mouseID)
+		drive = data_dir + '/neural'
 		mouse_dir = drive + '/' + mouseID + '/'
 		days = src.IO.get_carry_days(mouseID)
 		s2p_fld = src.IO.get_s2p_fld(mouseID, days[-1])
@@ -1037,7 +1039,7 @@ if plot_LOO_scatter_by_magnitude:
 
 if permutations:
 	for mouseID in mice:
-		drive = src.IO.get_drive(mouseID)
+		drive = data_dir + '/neural'
 		mouse_dir = drive + '/' + mouseID + '/'
 		save_dir = mouse_dir + 'carry_analysis/GLM/'
 		fig_save_dir = save_dir+'figures/'

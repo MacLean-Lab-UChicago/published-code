@@ -7,6 +7,8 @@ import src.utils
 import os
 import scipy.stats as stats
 import random
+from pathlib import Path
+data_dir = Path.cwd() / 'data'
 
 neurons_to_plot = 'max' # how many neurons to plot or all of them or a list of indices
 show_plots = False
@@ -28,7 +30,7 @@ all_mice_all_cells_active = np.zeros((0, 0, time_in_trial))*np.nan
 all_mice_all_cells_empty = np.zeros((0, 0, time_in_trial))*np.nan
 
 for mouseID in mice:
-	drive = src.IO.get_drive(mouseID)
+	drive = data_dir + '/neural'
 	mouse_dir = drive + '/' + mouseID + '/'
 	fig_savepath = mouse_dir + 'carry_analysis/figures/cell_PETHs/'
 
@@ -45,10 +47,7 @@ for mouseID in mice:
 	for i, day in enumerate(days):
 		# load in the Cascade spikes
 		calcium_data_path = mouse_dir + day
-		if (mouseID=='mouse22')|(mouseID=='mouse25')|(mouseID=='mouse39'):
-			s2p_fld = calcium_data_path + '/'
-		else:
-			s2p_fld = calcium_data_path + '/recording/tifs/suite2p/plane0/'
+		s2p_fld = calcium_data_path + '/'
 		
 		spks = np.load(s2p_fld + 'cascade_spks.npy')
 		# index by the registered cells

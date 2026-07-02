@@ -10,6 +10,8 @@ from scipy.stats import pearsonr
 import multiprocessing
 from functools import partial
 import os
+from pathlib import Path
+data_dir = Path.cwd() / 'data'
 
 def bootstrap_worker(boot_idx, n_neurons, n_trials, time_in_trial, activity, PETHs, PDF, FN_method, mouse_dir, all_spikes=None):
 	'''
@@ -125,14 +127,11 @@ FN_method = 'pearson_corr' # pearson_corr or MI
 
 for mouseID in mice:
 	print(mouseID)
-	drive = src.IO.get_drive(mouseID)
+	drive = data_dir + '/neural'
 	mouse_dir = drive + '/' + mouseID + '/'
 	days = src.IO.get_carry_days(mouseID)
 
-	if not os.path.isdir(mouse_dir + 'carry_analysis/figures/null/'):
-		os.mkdir(mouse_dir + 'carry_analysis/figures/null/')
-
-	reg_inds, red_cells = src.utils.load_registered_and_red_cells(mouse_dir, days)
+	reg_inds = src.utils.load_registered_cells(mouse_dir, days)
 	
 	active_spks = [[] for i in range(len(days))]
 	empty_spks = [[] for i in range(len(days))]
